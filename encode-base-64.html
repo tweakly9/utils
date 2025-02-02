@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder</title>
+    <style>
+        body {
+            margin: 5px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <label for="inputValue">Enter Value:</label><br>
+    <textarea id="inputValue" rows="4" cols="50"></textarea><br><br>
+    <button onclick="encodeBase64()">Encode</button><br><br>
+    <label for="resultValue">Result:</label><br>
+    <textarea id="resultValue" rows="4" cols="50" readonly></textarea><br><br>
+    <button onclick="copyToClipboard()">Copy</button><br><br>
+    <label id="errorLabel" class="error"></label>
+
+    <script>
+        function encodeBase64() {
+            const inputValue = document.getElementById('inputValue').value;
+            const errorLabel = document.getElementById('errorLabel');
+            const resultValue = document.getElementById('resultValue');
+
+            errorLabel.textContent = '';
+            resultValue.value = '';
+
+            if (!inputValue) {
+                errorLabel.textContent = 'Input is empty';
+                return;
+            }
+
+            try {
+                const encodedValue = btoa(inputValue);
+                resultValue.value = encodedValue;
+            } catch (error) {
+                errorLabel.textContent = 'Failed to encode in Base64';
+            }
+        }
+
+        function copyToClipboard() {
+            const resultValue = document.getElementById('resultValue');
+            resultValue.select();
+            document.execCommand('copy');
+        }
+    </script>
+</body>
+</html>
