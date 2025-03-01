@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure GitHub Private Repo Access</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .note {
+            background-color: #ffeb3b;
+            padding: 10px;
+            border-left: 6px solid #fbc02d;
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Configure GitHub Private Repo Access</h1>
+    <p>This guide will help you configure access to a private GitHub repository.</p>
+
+    <h2>Step 1: Generate a Personal Access Token</h2>
+    <p>To access a private repository, you need to generate a personal access token.</p>
+    <div class="note">
+        <strong>Note:</strong> Keep your personal access token secure and do not share it with anyone.
+    </div>
+
+    <h2>Step 2: Clone the Repository</h2>
+    <p>Use the following command to clone the repository:</p>
+    <pre><code>git clone https://github.com/username/repo.git</code></pre>
+
+    <h2>Step 3: Configure Git</h2>
+    <p>Set your Git username and email:</p>
+    <pre><code>git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"</code></pre>
+
+    <h2>Step 4: Push Changes</h2>
+    <p>After making changes, use the following commands to push them to the repository:</p>
+    <pre><code>git add .
+git commit -m "Your commit message"
+git push origin main</code></pre>
+
+    <h2>Approach 2: Using SSH Keys</h2>
+    <p>If you prefer to use SSH keys instead of a personal access token, follow these steps:</p>
+
+    <h3>Step 1: Generate SSH Key</h3>
+    <p>Generate a new SSH key if you don't already have one:</p>
+    <pre><code>ssh-keygen -t rsa -b 4096 -C "your.email@example.com"</code></pre>
+
+    <h3>Step 2: Add SSH Key to GitHub</h3>
+    <p>Copy the SSH key to your clipboard and add it to your GitHub account:</p>
+    <pre><code>pbcopy < ~/.ssh/id_rsa.pub</code></pre>
+    <p>Then, go to GitHub > Settings > SSH and GPG keys > New SSH key, and paste the key.</p>
+
+    <h3>Step 3: Clone the Repository</h3>
+    <p>Use the SSH URL to clone the repository:</p>
+    <pre><code>git clone git@github.com:username/repo.git</code></pre>
+
+    <h3>Step 4: Push Changes</h3>
+    <p>After making changes, use the following commands to push them to the repository:</p>
+    <pre><code>git add .
+git commit -m "Your commit message"
+git push origin main</code></pre>
+
+    <h2>Step 4: Git Extension</h2>
+    <p>If you are using a Git extension, follow these steps to configure it:</p>
+
+    <h3>Step 1: Install the Extension</h3>
+    <p>Install the Git extension for your IDE or text editor.</p>
+
+    <h3>Step 2: Configure the Extension</h3>
+    <p>Open the extension settings and configure your GitHub credentials.</p>
+    <div class="note">
+        <strong>Note:</strong> Ensure that you use the personal access token or SSH key you generated earlier.
+    </div>
+
+    <h3>Step 3: Use the Extension</h3>
+    <p>Use the extension to clone repositories, commit changes, and push to GitHub.</p>
+</body>
+
+</html>

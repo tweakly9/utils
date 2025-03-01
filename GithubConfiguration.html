@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure GitHub Private Repo Access</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Configure GitHub Private Repo Access</h1>
+    <h3>Approach 1: Using Access Token and Command Line Tool</h3>
+    <ol>
+        <li>
+            <h2>Generate a Personal Access Token</h2>
+            <p>Go to <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings</a> and generate a new
+                personal access token with the necessary permissions.</p>
+        </li>
+        <li>
+            <h2>Clone the Repository</h2>
+            <p>Use the following command to clone the repository. Replace <code>YOUR_PERSONAL_ACCESS_TOKEN</code> and
+                <code>YOUR_USERNAME</code> with your actual token and username, and <code>REPO_URL</code> with the
+                repository URL.
+            </p>
+            <pre><code>git clone https://YOUR_USERNAME:YOUR_PERSONAL_ACCESS_TOKEN@github.com/REPO_URL.git</code></pre>
+            <p><strong>Note:</strong> Do not share your personal access token with anyone and handle it securely.</p>
+        </li>
+        <li>
+            <h2>Configure Git to Store Your Credentials</h2>
+            <pre><code>git config --global credential.helper store</code></pre>
+            <p><strong>Warning:</strong> Storing credentials in plain text is not secure. Consider using
+                <code>credential.helper cache</code> or a credential manager instead.
+            </p>
+            <p>To use the cache helper, run:</p>
+            <pre><code>git config --global credential.helper cache</code></pre>
+            <p>To use a credential manager, follow the instructions for your operating system:</p>
+            <ul>
+                <li><a href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git#platform-linux"
+                        target="_blank">Linux</a></li>
+                <li><a href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git#platform-macos"
+                        target="_blank">macOS</a></li>
+                <li><a href="https://docs.github.com/en/get-started/getting-started-with-git/caching-your-github-credentials-in-git#platform-windows"
+                        target="_blank">Windows</a></li>
+            </ul>
+            <p>After running this command, the next time you enter your credentials, Git will store them in a plain text
+                file in your home directory.</p>
+        </li>
+    </ol>
+
+    <h3>Approach 2: Using SSH Key and Git Extnesion</h3>
+    <p><strong>Note:</strong>Open Git Cli or Git Bash and generate the key using the folloiwng steps</p>
+    <ol>
+        <li>
+            <h4>Step 1: Check If You Have an SSH Key</h2>
+                <pre><code>ls -la ~/.ssh</code></pre>
+                <h5>You should see files like:</h5>
+                <pre><code>###_rsa  ###_rsa.pub  known_hosts</code></pre>
+        </li>
+        <li>
+            <h4>Step 2: If ###_rsa.pub is missing, or you want to generate a new SSH key.</h2>
+                <pre><code>ssh-keygen -t rsa -b 4096 -C "your-email@example.com"  </code></pre>
+                <ul>
+                    <li>
+                        When prompted, press Enter to accept the default location (~/.ssh/id_rsa).
+
+                    </li>
+                    <li>Set a passphrase (optional).</li>
+                </ul>
+        </li>
+        <li>
+            <h4>Step 3: Add SSH Key to GitHub.</h2>
+
+                <ul>
+                    <li>
+                        Copy the SSH public key(###_rsa.pub) to your clipboard.
+                    </li>
+                    <li>
+                        Go to GitHub → Settings → SSH and GPG keys
+                    </li>
+                    <li>Click New SSH Key, paste the key, and save it.</li>
+                </ul>
+        </li>
+        <li>
+            <h4>Step 4: Add SSH Key to SSH Agent</h2>
+                <h5>Run the following to ensure your key is being used:</h5>
+                <pre><code>
+                    eval "$(ssh-agent -s)"
+                    ssh-add ~/.ssh/###_rsa       
+                </code></pre>
+        </li>
+        <li>
+            <h4>Step 4: Test SSH Connection Again</h2>
+                <h5>Run the following to ensure your connection is good now:</h5>
+                <pre><code>ssh -T git@github.com   </code></pre>
+        </li>
+        <li>
+            <h4>Step 4: Clone the github repo</h2>
+                <h5>Run the following:</h5>
+                <pre><code>git@github.com:your-username/your-private-repo.git                </code></pre>
+        </li>
+        <li>
+            <h4>Step 4: Git Extnesion </h2>
+                <h5>If GitExtensions is asking for a .ppk file, it means it uses PuTTY (Pageant) for SSH authentication
+                    instead of OpenSSH. Here's how you can configure it:
+                </h5>
+                <ul>
+                    <li>
+                        Download & Install PuTTY (if not already installed) includes PuTTYgen and Pageant).
+                    </li>
+                    <li>
+                        Open PuTTYgen and load your existing SSH key
+                        <ul>
+                            <li>Click Load.</li>
+                            <li>Change the file type to All Files (*.*)</li>
+                            <li>Load your private key file (###_rsa)</li>
+                            <li>Click Save private key and save it as a .ppk file.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Configure GitExtensions to Use PuTTY
+                        <ul>
+                            <li>Go to GitExtensions → Settings → Global settings → SSH.</li>
+                            <li>Set the SSH client to Plink (PuTTY).</li>
+                            <li>Set the path to Plink.exe (usually C:\Program Files\PuTTY\plink.exe).</li>
+                            <li>Go to Settings → SSH Key.</li>
+                            <li>Select your ###_rsa.ppk file</li>
+                            <li>Save and restart GitExtensions.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <pre><code>git@github.com:your-username/your-private-repo.git                </code></pre>
+                    </li>
+                </ul>
+        </li>
+    </ol>
+
+</body>
+
+</html>
